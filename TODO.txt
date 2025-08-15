@@ -1,0 +1,4 @@
+TODO list :
+// 1. Zprovoznit AI hráče
+// 2. Přidat typy her (různé délky, různé sázky)
+// 3. Turnaje ?
