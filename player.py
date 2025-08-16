@@ -15,7 +15,18 @@ class Player:
 
     def change_coins(self, amount):
         self.coins += amount
-        self.save()
+        if self.coins <= 0:
+            print(f"Player {self.name} has run out of coins! Deleting player :)")
+            self.delete_player()
+        else:
+            self.save()
+
+    def delete_player(self):
+        players = self.load_players()
+        if self.name in players:
+            del players[self.name]
+            self.save_players(players)
+            print(f"Player {self.name} has been deleted.") 
 
     @classmethod
     def load_players(cls):

@@ -1,4 +1,4 @@
-from game import Game
+from game import Game, RollSet
 WIN_REW = 20
 LOOSE_PEN = 20
 

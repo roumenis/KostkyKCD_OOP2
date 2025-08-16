@@ -2,4 +2,4 @@ TODO list :
 // 1. Zprovoznit AI hráče
 // 2. Přidat typy her (různé délky, různé sázky) ✅
 // 3. Turnaje ?
-// 4. Jakmile je hrač na 0 groších, smaže se z databáze
+// 4. Jakmile je hrač na 0 groších, smaže se z databáze ✅
