@@ -64,5 +64,9 @@ class AIPlayer(Player):
         return scoring_dices
     def decide_continue(self):
         # AI logic to decide whether to continue rolling
-        # For simplicity, let's say AI always continues if it has scoring dices
-        return True if self.score > 0 else False
+        if round_score < self.risk_low:
+            return random.random() < self.risk_low_chance / 100
+        elif round_score < self.risk_high:
+            return random.random() < self.risk_high_chance / 100 and remaining_dice >= self.min_dice_continue
+        else:
+            return False
