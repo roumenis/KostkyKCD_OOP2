@@ -58,6 +58,22 @@ class Player:
 
 # TODO - Make some logic for AI player
 class AIPlayer(Player):
+    def __init__(self,
+                 name = "AI",
+                 coins=None,
+                 score=0,
+                 risk_low=300,
+                 risk_high=750,
+                 min_dice_continue=2,
+                 risk_low_chance=70,
+                 risk_high_chance=60):
+        super().__init__(name, score, coins)
+        self.risk_low = risk_low
+        self.risk_high = risk_high
+        self.min_dice_continue = min_dice_continue
+        self.risk_low_chance = risk_low_chance
+        self.risk_high_chance = risk_high_chance
+
     def choose_dices(self, scoring_dices):
         # AI logic to choose which dices to keep
         # For simplicity, let's say AI keeps all scoring dices
