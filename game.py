@@ -10,15 +10,18 @@ class Game:
 
         print("Available players:")
         for name in all_players:
-            print(f"- {name}")
+            print(f"- {name} (coins: {all_players[name].coins})")
 
-        # Choose player 1
+        # Choose player 1 (You)
         name1 = input("Choose first player: ").strip()
         player1 = Player.load_or_create(name1)
 
-        # Choose player 2
-        name2 = input("Choose second player: ").strip()
-        player2 = Player.load_or_create(name2)
+        # Choose player 2 (CPU)
+        name2 = input("Choose second player (or type 'AI'): ").strip()
+        if name2.lower() == "ai":
+            player2 = AIPlayer()
+        else:
+            player2 = Player.load_or_create(name2)
 
         # Choose game type
         self.target_score, self.bet = self.game_type()
@@ -60,8 +63,7 @@ class Game:
 
         return score
 
-    def get_scoring_dice(self, values):
-        # Special combinations
+    def get_scoring_dice(self, values, player):
         sorted_vals = sorted(values)
         if sorted_vals in ([1, 2, 3, 4, 5, 6], [2, 3, 4, 5, 6], [1, 2, 3, 4, 5]):
             print("Special combination!")
@@ -70,21 +72,26 @@ class Game:
         counts = {i: values.count(i) for i in range(1, 7)}
         scoring = []
 
-        # Triples and more
         for num in range(1, 7):
             if counts[num] >= 3:
                 scoring.extend([num] * counts[num])
                 counts[num] = 0
 
-        # 1  and 5 scoring
         scoring.extend([1] * counts[1])
         scoring.extend([5] * counts[5])
 
         if not scoring:
             return []
 
-        print("Pointing dices:", scoring)
+        print("Pointing dices: ", scoring)
 
+        # AI choose
+        if isinstance(player, AIPlayer):
+            chosen = player.choose_dices(scoring)
+            print(f"{player.name} chose: {chosen}")
+            return chosen
+
+        # Player choose
         while True:
             selection = input("Select dices to take (separated by space): ")
             try:
@@ -113,7 +120,7 @@ class Game:
             values = self.roll_set.roll_remaining()
             print(f"{player.name} threw: {values}")
 
-            chosen = self.get_scoring_dice(values)
+            chosen = self.get_scoring_dice(values, player)
 
             if not chosen:
                 print("No scoring dice! Bad luck")
@@ -126,16 +133,25 @@ class Game:
 
             self.roll_set.remaining -= len(chosen)
 
-            # HOT DICE
             if self.roll_set.remaining == 0:
                 print("Hot dice! You play with all dices again.")
                 self.roll_set.remaining = 6
 
-            cont = input("Another throw? (y/n): ").strip().lower()
-            if cont != 'y':
-                player.add_score(round_score)
-                print(f"End of round, {player.name} scored {round_score} and has {player.score} points.")
-                return
+            # AI decides
+            if isinstance(player, AIPlayer):
+                cont = player.decide_continue(round_score, self.roll_set.remaining)
+                print(f"{player.name} {'continues' if cont else 'stops'} with {round_score} points.")
+                if not cont:
+                    player.add_score(round_score)
+                    print(f"End of round, {player.name} scored {round_score} and has {player.score} points.")
+                    return
+            else:
+                # Player decides
+                cont = input("Another throw? (y/n): ").strip().lower()
+                if cont != 'y':
+                    player.add_score(round_score)
+                    print(f"End of round, {player.name} scored {round_score} and has {player.score} points.")
+                    return
 
     def play(self):
         print("=== Hra V Kostky ===")

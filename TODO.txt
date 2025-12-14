@@ -3,3 +3,25 @@ TODO list :
 // 2. Přidat typy her (různé délky, různé sázky) ✅
 // 3. Turnaje ?
 // 4. Jakmile je hrač na 0 groších, smaže se z databáze ✅
+
+🔹 Příklady rozhodování
+
+round_score = 300, remaining_dice = 4
+
+méně než 500 bodů → AI riskuje → pokračuje ✅
+
+round_score = 700, remaining_dice = 2
+
+spadá do 500–1000, ale jen 2 kostky → končí ❌
+
+round_score = 700, remaining_dice = 5
+
+spadá do 500–1000, má 5 kostek → pokračuje ✅
+
+round_score = 1200, remaining_dice = 2
+
+hodně bodů → většinou končí → končí ❌
+
+round_score = 1500, remaining_dice = 6 (HOT DICE)
+
+i když má hodně, HOT DICE = nový start → pokračuje ✅
