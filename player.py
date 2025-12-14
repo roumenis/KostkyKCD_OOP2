@@ -15,7 +15,18 @@ class Player:
 
     def change_coins(self, amount):
         self.coins += amount
-        self.save()
+        if self.coins <= 0:
+            print(f"Player {self.name} has run out of coins! Deleting player :)")
+            self.delete_player()
+        else:
+            self.save()
+
+    def delete_player(self):
+        players = self.load_players()
+        if self.name in players:
+            del players[self.name]
+            self.save_players(players)
+            print(f"Player {self.name} has been deleted.") 
 
     @classmethod
     def load_players(cls):
@@ -47,11 +58,31 @@ class Player:
 
 # TODO - Make some logic for AI player
 class AIPlayer(Player):
+    def __init__(self,
+                 name = "AI",
+                 coins=None,
+                 score=0,
+                 risk_low=300,
+                 risk_high=750,
+                 min_dice_continue=2,
+                 risk_low_chance=70,
+                 risk_high_chance=60):
+        super().__init__(name, score, coins)
+        self.risk_low = risk_low
+        self.risk_high = risk_high
+        self.min_dice_continue = min_dice_continue
+        self.risk_low_chance = risk_low_chance
+        self.risk_high_chance = risk_high_chance
+
     def choose_dices(self, scoring_dices):
         # AI logic to choose which dices to keep
         # For simplicity, let's say AI keeps all scoring dices
         return scoring_dices
     def decide_continue(self):
         # AI logic to decide whether to continue rolling
-        # For simplicity, let's say AI always continues if it has scoring dices
-        return True if self.score > 0 else False
+        if round_score < self.risk_low:
+            return random.random() < self.risk_low_chance / 100
+        elif round_score < self.risk_high:
+            return random.random() < self.risk_high_chance / 100 and remaining_dice >= self.min_dice_continue
+        else:
+            return False

@@ -131,7 +131,7 @@ class Game:
                 print("Hot dice! You play with all dices again.")
                 self.roll_set.remaining = 6
 
-            cont = input("Another run? (y/n): ").strip().lower()
+            cont = input("Another throw? (y/n): ").strip().lower()
             if cont != 'y':
                 player.add_score(round_score)
                 print(f"End of round, {player.name} scored {round_score} and has {player.score} points.")
